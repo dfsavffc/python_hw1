@@ -21,6 +21,9 @@ class Tensor:
         if not isinstance(data, list):
             raise TypeError(f"invalid type: '{type(data).__name__}'")
 
+        if not all(isinstance(d, int) and d > 0 for d in dimension):
+            raise ValueError("invalid dimension")
+
         if isinstance(dimension, int) and dimension != len(data):
             raise ValueError("invalid dimension")
 
