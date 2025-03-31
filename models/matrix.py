@@ -41,12 +41,12 @@ class Matrix(Tensor):
             raise IndexError("matrix index out of range")
         return (r % m) * n + (c % n)
 
-    def conv_i2rc(self, i):
+    def conv_i2rc(self, idx):
         """
         Convert a flat list index to (row, column) indices.
 
         Args:
-            i (int): Flat list index.
+            idx (int): Flat list index.
 
         Returns:
             tuple: (row, column) indices.
@@ -54,17 +54,17 @@ class Matrix(Tensor):
         Raises:
             IndexError: If the index is out of bounds.
         """
-        rows, cols = self.dimension
-        if not (0 <= i < rows * cols):
+        m, n = self.dimension
+        if not (-m * n <= idx < m * n):
             raise IndexError("matrix index out of range")
-        return divmod(i, cols)
+        return divmod(idx % (m * n), n)
 
     def __str__(self):
         """
         Return a formatted string representation of the matrix.
         Columns are right-aligned based on the width of the largest element.
         """
-        max_width = len(str(max(self._data, key=abs)))  # Determine column width
+        max_width = max(len(str(elem)) for elem in self._data) # Determine column width
         rows, cols = self.dimension
 
         result = "[\n"
